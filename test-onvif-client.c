@@ -115,32 +115,34 @@ pad_added_cb (GstElement * src, GstPad * srcpad, GstElement * peer)
 static gboolean
 setup (Context * ctx)
 {
-  GstElement *onvifparse, *queue, *vdepay, *vdec, *vconv, *toverlay, *tee,
-      *vqueue;
+  GstElement *onvifparse, *queue, *vdepay, *vdec, *vconv, *tee, *vqueue, *upload;
+  // GstElement *toverlay;
   gboolean ret = FALSE;
 
   MAKE_AND_ADD (ctx->src, ctx->pipe, "rtspsrc", done, NULL);
   MAKE_AND_ADD (queue, ctx->pipe, "queue", done, NULL);
   MAKE_AND_ADD (onvifparse, ctx->pipe, "rtponvifparse", done, NULL);
-  MAKE_AND_ADD (vdepay, ctx->pipe, "rtph264depay", done, NULL);
-  MAKE_AND_ADD (vdec, ctx->pipe, "avdec_h264", done, NULL);
+  MAKE_AND_ADD (vdepay, ctx->pipe, "rtph265depay", done, NULL);
+  MAKE_AND_ADD (vdec, ctx->pipe, "avdec_h265", done, NULL);
   MAKE_AND_ADD (vconv, ctx->pipe, "videoconvert", done, NULL);
-  MAKE_AND_ADD (toverlay, ctx->pipe, "timeoverlay", done, NULL);
+  // MAKE_AND_ADD (toverlay, ctx->pipe, "timeoverlay", done, NULL);
   MAKE_AND_ADD (tee, ctx->pipe, "tee", done, NULL);
   MAKE_AND_ADD (vqueue, ctx->pipe, "queue", done, NULL);
-  MAKE_AND_ADD (ctx->sink, ctx->pipe, "xvimagesink", done, NULL);
+  MAKE_AND_ADD (upload, ctx->pipe, "glupload", done, NULL);
+  MAKE_AND_ADD (ctx->sink, ctx->pipe, "glimagesink", done, NULL);
 
   g_object_set (ctx->src, "location", rtsp_address, NULL);
   g_object_set (ctx->src, "onvif-mode", TRUE, NULL);
   g_object_set (ctx->src, "tcp-timeout", 0, NULL);
-  g_object_set (toverlay, "show-times-as-dates", TRUE, NULL);
+  // g_object_set (toverlay, "show-times-as-dates", TRUE, NULL);
 
-  g_object_set (toverlay, "datetime-format", "%a %d, %b %Y - %T", NULL);
+  // g_object_set (toverlay, "datetime-format", "%a %d, %b %Y - %T", NULL);
 
   g_signal_connect (ctx->src, "pad-added", G_CALLBACK (pad_added_cb), queue);
 
-  if (!gst_element_link_many (queue, onvifparse, vdepay, vdec, vconv, toverlay,
-          tee, vqueue, ctx->sink, NULL)) {
+  if (!gst_element_link_many (queue, onvifparse, vdepay, vdec, vconv, 
+          // toverlay,
+          tee, vqueue, upload, ctx->sink, NULL)) {
     goto done;
   }
 

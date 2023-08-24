@@ -99,7 +99,7 @@ demux_pad_added_cb (GstElement * demux, GstPad * pad, GstGhostPad * ghost)
   GstCaps *caps = gst_pad_get_current_caps (pad);
   GstStructure *s = gst_caps_get_structure (caps, 0);
 
-  if (gst_structure_has_name (s, "video/x-h264")) {
+  if (gst_structure_has_name (s, "video/x-h265")) {
     gst_ghost_pad_set_target (ghost, pad);
   }
 
@@ -547,8 +547,8 @@ onvif_factory_create_element (GstRTSPMediaFactory * factory,
     goto fail;
 
   MAKE_AND_ADD (q1, pbin, "queue", fail, NULL);
-  MAKE_AND_ADD (parse, pbin, "h264parse", fail, NULL);
-  MAKE_AND_ADD (pay, pbin, "rtph264pay", fail, NULL);
+  MAKE_AND_ADD (parse, pbin, "h265parse", fail, NULL);
+  MAKE_AND_ADD (pay, pbin, "rtph265pay", fail, NULL);
   MAKE_AND_ADD (onvifts, pbin, "rtponviftimestamp", fail, NULL);
   MAKE_AND_ADD (q2, pbin, "queue", fail, NULL);
 
