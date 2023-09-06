@@ -2,7 +2,9 @@ This is an excerpt from gst-rtsp-server/examples:
 https://gitlab.freedesktop.org/gstreamer/gstreamer/-/tree/main/subprojects/gst-rtsp-server/examples
 
 This is a test-onvif-client.c and test-onvif-server.c only project running in VS Code.
-I have slightly modified the source code to run with H.265 and on Windows. (see git history)
+I have slightly modified the source code to run with H.265 and on Windows. 
+
+![git_first_history](git_first_history.png)
 
 Both Linux and Windows build with Meson.
 
